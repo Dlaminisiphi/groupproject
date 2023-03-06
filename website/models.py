@@ -1,9 +1,21 @@
 from . import db
 from flask_login import UserMixin
+from sqlalchemy import func
+#database for storing the querys
+class report(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    placeof= db.Column(db.String(100))
+    blockof= db.Column(db.String(100))
+    problem= db.Column(db.String(1000))
+    date= db.Column(db.DateTime(timezone=True), default=func.now())
+    #this helps uslink a user with they report page
+    user_id= db.Column(db.Integer, db.ForeignKey('user.id'))
 
-#database
+
+#sign up user data base
 class User(db.Model, UserMixin):
-    id = db.Column(db.Interger, primary_key=True)
-    email= db.column(db.String(100), unique=True)
-    password=db.column(db.String(150))
-    first_name=db.column(db.String(150))
+    id = db.Column(db.Integer, primary_key=True)
+    email= db.Column(db.String(100), unique=True)
+    password=db.Column(db.String(150))
+    first_name=db.Column(db.String(150))
+    reports = db.relationship('report')

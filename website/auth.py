@@ -1,4 +1,8 @@
-from flask import Blueprint,render_template, request, flash
+from flask import Blueprint,render_template, request, flash, redirect, url_for
+from .models import User
+from werkzeug.security import generate_password_hash, check_password_hash
+from . import db
+
 
 auth=Blueprint('auth',__name__)
 
@@ -7,7 +11,7 @@ def login():
     data=request.form
     print(data)
     return render_template("login.html")
-
+ 
 @auth.route('/admin', methods=['GET','POST'])
 def admin():
     data=request.form
@@ -23,7 +27,7 @@ def sign_up():
     #Get user data from sign up page
     if request.method== 'POST':
         email=request.form.get('email')
-        name=request.form.get('name')
+        first_name=request.form.get('name')
         password1=request.form.get('password1')
         password2=request.form.get('password2')
         
@@ -31,7 +35,7 @@ def sign_up():
         if len(email)<=4:
             flash(' not a valid email ', category='error')
         
-        elif len(name)<=2:
+        elif len(first_name)<=2:
             flash(' Name must be more than 2 charecters ', category='error')
 
             
@@ -42,7 +46,13 @@ def sign_up():
         elif len(password1)< 7:
             flash(' password must be more than 7 chatecters ', category='error')
         else:
+            new_user= User(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+            #adding to database
+            db.session.add(new_user)
+            db.session.commit()
             flash(' acount created! ', category='success')
+            return redirect(url_for('views.home'))
+
             
     return render_template("sign_up.html")
 
