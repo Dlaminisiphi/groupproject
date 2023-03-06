@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+    <title>{% block title %}Home{% endblock %}</title>
+</head>
+<body>
+    <div class="topnav">
+        <a class="nav-item nav-link" id="login"  href="/login">login</a>
+        <a class="nav-item nav-link" id="admin"  href="/admin">Admin</a>
+        <a class="nav-item nav-link" id="signup" href="/sign-up">sign up</a>
+        <a class="nav-item nav-link" id="logout" href="/log-out">logout</a>
+        <a class="nav-item nav-link" id="home"   href="/">Home</a>
+      </div>
+            <!-- to display error or sucsses-->
+            {% with messages= get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for message in messages %}
+            {% if categories== 'error' %}
+            <div class="alert">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+              {{ message }}
+            </div>
+            {% else %}
+            <div class="succses">
+              <span class="closbtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+              {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+      
+      
+      
+      <div class="container">
+        {% block content %}
+        {% endblock %}
+      </div>
+
+
+
+
+
+
+
+
+    
+</body>
+</html>
