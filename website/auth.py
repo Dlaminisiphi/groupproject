@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template, request, flash, redirect, url_for
+from . import db
 from .models import User,report,Admin
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
 from flask_login import login_user, login_required, logout_user,current_user
 
 
@@ -32,10 +32,43 @@ def login():
 #Admin
 @auth.route('/admin', methods=['GET','POST'])
 def admin():
+    
+
     #validate user data
     data=request.form=='POST'
+    username =request.form.get('Admin_email')
+    password =request.form.get('Admin_password')
 
-    return render_template("Admin_login.html", user= current_user)
+
+
+
+ 
+
+    admins = Admin.query.filter_by(username=username).first()
+    if  admins:
+        if check_password_hash(admins.password, password):
+            flash('Logged in sucessfuly', category='success')
+            login_user(admins, remember=True)
+            return redirect('/admin')
+    
+    else:
+        flash('wrong username or password ',category='error')
+
+    
+ 
+
+
+
+
+
+
+
+
+
+    
+
+    return render_template("Admin_login.html", user= current_user,)
+
 
 
 #LogOut
@@ -109,4 +142,8 @@ def user_Page():
 
 
     return render_template("user_page.html", user= current_user)
-
+#Admin page
+@auth.route('/admin_page', methods=['GET','POST'])
+def admin_page():
+        reports=report.query.all()
+        return render_template("admin_page.html", user= current_user,reports=reports )

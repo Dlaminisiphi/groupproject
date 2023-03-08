@@ -1,6 +1,8 @@
 from . import db
 from flask_login import UserMixin
 from sqlalchemy import func
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
@@ -15,6 +17,10 @@ class report(db.Model):
     user_id= db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
+
+
+
+
 #sign up user data base
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +30,22 @@ class User(db.Model, UserMixin):
     reports = db.relationship('report')
 
 #Admin DataBase
-class Admin(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email= db.Column(db.String(100), unique=True)
-    password=db.Column(db.String(150))
+class Admin(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     username = db.Column(db.String(80), unique=True, nullable=False)
+     password = db.Column(db.String(120), nullable=False)
+
+     def __repr__(self):
+         return '<Admin %r>' % self.username
+     
+
+
+
+
+def create_login(app):
+ with app.app_context():
+  db.create_all()
+  admin=Admin(username='admin',password=generate_password_hash('admin123', method='sha256'))
+  db.session.add(admin)
+  db.session.commit()
+

@@ -1,0 +1,44 @@
+{%extends "base.html"%}{% block title %}Admin Page{%endblock%}
+{% block content %}
+<div class="container">
+    <div class="my-2">
+        <form action="" method="POST" style="width:100%">
+            <div class="d-flex align-items-center">
+                <input type="text" name="search" id="search" class="form-control my-1 w-50">
+                <button type="submit" class="btn btn-success " style="margin-left:10px;">Search</button>
+            </div>
+        </form>
+    </div>
+    <div class="my-2">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Place</th>
+                        <th>block</th>
+                        <th>problem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <tr>
+                            <td>{{report.id}}</td>
+                            <td>{{report.placeof}}</td>
+                            <td>{{report.blockof}}</td>
+                            <td>{{report.problem}}</td>
+                            <td>{{user.id }}</td>
+                          </tr>
+                          <a href="/admin/approve-user/{{user.id}}">
+                            <button class="btn btn-warning">Approve</button>
+                        </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -27,6 +27,7 @@ def create_app():
     from .models import User, report
 
     create_database(app)
+   
      #where the user must go if not logged in
     login_manager=LoginManager()
     login_manager.login_view='auth.login'
@@ -44,6 +45,12 @@ def create_database(app):
     with app.app_context():
        db.create_all()
     print('Created database')
+
+
+
+
+
+
 
 
 
