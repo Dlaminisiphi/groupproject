@@ -1,12 +1,12 @@
 from flask import Blueprint,render_template, request, flash, redirect, url_for
 from . import db
-from .models import User,report,Admin
+from .models import User,report, Admin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user,current_user
 
 
 auth=Blueprint('auth',__name__)
-
+#--------------------------------------------------------------------------USER LOG IN---------------------------------------------------------------------------------------------
 @auth.route('/login', methods=['GET','POST'])
 def login():
 
@@ -14,7 +14,6 @@ def login():
     data=request.form=='POST'
     email= request.form.get('email')
     password = request.form.get('password')
-    
     user = User.query.filter_by(email=email).first()
     if user:
         if check_password_hash(user.password, password):
@@ -26,29 +25,41 @@ def login():
             
     else: flash('Email does not exist', category='error')
 
+
     return render_template("login.html", user= current_user)
  
-
+#--------------------------------------------------------------------------ADMIN LOG IN---------------------------------------------------------------------------------------------
 #Admin
 @auth.route('/admin', methods=['GET','POST'])
 def admin():
-    
+    #validate Admin dat
+    if  request.method== 'POST':
+        username=request.form.get('username')
+        password=request.form.get('password')
+        
+        user = username=='admin' and password=='password123'
+        if user:
+            flash('logged in sucessfuly', category='success')
+            return redirect(url_for('auth.admin_page'))
+        
+        else:
+            flash('invalid details', category='error')
 
-    #validate user data
-    data=request.form=='POST'
     return render_template("Admin_login.html", user= current_user,)
 
 
 
-#LogOut
-@auth.route('/log-out')
+#--------------------------------------------------------------------------SIGN OUT---------------------------------------------------------------------------------------------
+@auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
 
-#Sign Up Info
+
+
+#--------------------------------------------------------------------------USER SIGN UP---------------------------------------------------------------------------------------------
 @auth.route("/sign-up", methods=['GET','POST'])
 def sign_up():
     #Get user data from sign up page
@@ -80,15 +91,15 @@ def sign_up():
             #adding to database
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
             flash(' acount created! ', category='success')
             return redirect(url_for('views.home'))
 
             
     return render_template("sign_up.html", user=current_user )
 
-#User Page 
+#--------------------------------------------------------------------------USER PAGE TO LOG A REPORT---------------------------------------------------------------------------------------------
 @auth.route('/user_page', methods=['GET','POST'])
+@login_required
 def user_Page():
     if   request.method== 'POST':
         placeof=request.form.get('PlaceOf')
@@ -99,7 +110,7 @@ def user_Page():
             flash('place enter place', category='error')
         elif blockof=="":
             flash('place enter block', category='error')
-        elif len(problem)<7:
+        elif len(problem)<3:
             flash('please type a descrptive problem to help maintenace team', category='error')
         else:
             new_complant= report(placeof=placeof, blockof=blockof, problem=problem)
@@ -111,8 +122,13 @@ def user_Page():
 
 
     return render_template("user_page.html", user= current_user)
-#Admin page
+#--------------------------------------------------------------------------ADMIN PAGE---------------------------------------------------------------------------------------------
 @auth.route('/admin_page', methods=['GET','POST'])
 def admin_page():
         reports=report.query.all()
         return render_template("admin_page.html", user= current_user,reports=reports )
+
+
+
+
+

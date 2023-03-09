@@ -9,5 +9,6 @@ Things that still need to be cooded:
 
 
 things im planning to do today:
-1. put style on all pages
-2. finish admin page
+1. put style on all pages(finished)
+2. finish admin database
+
