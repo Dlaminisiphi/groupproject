@@ -1,44 +1,52 @@
 {%extends "base.html"%}{% block title %}Admin Page{%endblock%}
 {% block content %}
-<div class="container">
-    <div class="my-2">
-        <form action="" method="POST" style="width:100%">
-            <div class="d-flex align-items-center">
-                <input type="text" name="search" id="search" class="form-control my-1 w-50">
-                <button type="submit" class="btn btn-success " style="margin-left:10px;">Search</button>
-            </div>
-        </form>
-    </div>
-    <div class="my-2">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Place</th>
-                        <th>block</th>
-                        <th>problem</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for report in reports %}
-                    <tr>
-                        <tr>
-                            <td>{{report.id}}</td>
-                            <td>{{report.placeof}}</td>
-                            <td>{{report.blockof}}</td>
-                            <td>{{report.problem}}</td>
-                            <td>{{user.id }}</td>
-                          </tr>
-                          <a href="/admin/approve-user/{{user.id}}">
-                            <button class="btn btn-warning">Approve</button>
-                        </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>My Table</title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+   <div class="container-fluid mt-2">
+      <table class="table table-bordered">
+         <thead>
+            <tr>
+               <th>ID</th>
+               <th>Place</th>
+               <th>Block</th>
+               <th>Problem</th>
+               <th>Actions</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for report in reports %}
+             <tr>
+               
+                <td>{{report.id}}</td>
+                <td>{{report.placeof}}</td>
+                <td>{{report.blockof}}</td>
+                <td>{{report.problem}}</td>
+                <td>
+                   <button type="button" class="btn btn-danger">Delete</button>
+                   <button type="button" class="btn btn-primary">Problem Seen</button>
+                   <button type="button" class="btn btn-success">Problem Fixed</button>
+                </td>
+             </tr>
+            {% endfor %}
+  
+            </tr>
+         </tbody>
+      </table>
+   </div>
+
+   <!-- Optional JavaScript -->
+   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.core.min.js"
+           integrity="sha384-ZxC6B5U+eLNCleOv/AiNLFCsbjKryJyXowpfmem7vVI2dJQV4HKcRZnkRl7mC0Jj"
+           crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}

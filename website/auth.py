@@ -36,37 +36,6 @@ def admin():
 
     #validate user data
     data=request.form=='POST'
-    username =request.form.get('Admin_email')
-    password =request.form.get('Admin_password')
-
-
-
-
- 
-
-    admins = Admin.query.filter_by(username=username).first()
-    if  admins:
-        if check_password_hash(admins.password, password):
-            flash('Logged in sucessfuly', category='success')
-            login_user(admins, remember=True)
-            return redirect('/admin')
-    
-    else:
-        flash('wrong username or password ',category='error')
-
-    
- 
-
-
-
-
-
-
-
-
-
-    
-
     return render_template("Admin_login.html", user= current_user,)
 
 

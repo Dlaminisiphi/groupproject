@@ -1,13 +1,37 @@
 {%extends "base.html"%}{% block title %}User Page{%endblock%}
 {% block content %}
-<form method="POST"></for>
-    <div class="report">
-        <h1>Report Form</h1>
-        
-        <input type="text" class="Report_for" name="PlaceOf" placeholder="Capmus Problem is located"><br>
-        <input type="text" class="Report_for" name="BlockOf" placeholder="the Block Problem is located"><br>
-        <input type="text" class="report_problem" name="Report_problem" placeholder="what is the query the Query"><br>
-        <button class="Report-btn" name="Report-btn" > submit</button>
-
-    </div>
-    {% endblock %}
+    <form method="POST">
+      <h3 align="center">Report Form</h3>
+      <div class="form-group">
+        <label for="PlaceOf">Enter Campus</label>
+        <input
+          type="text"
+          class="form-control"
+          id="PlaceOf"
+          name="PlaceOf"
+          placeholder="Enter The Campus You Reporting From"
+        />
+      </div>
+      <div class="form-group">
+        <label for="BlockOf">Campus Block</label>
+        <input
+          type="text"
+          class="form-control"
+          id="BlockOf"
+          name="BlockOf"
+          placeholder="Enter The Campus You Reporting From "
+        />
+      </div>
+      <div class="form-group">
+        <label for="report_problem">Enter The Problem</label>
+        <input
+          type="text"
+          class="form-control"
+          id="report_problem"
+          name="report_problem"
+          placeholder="Please State What The Problem Is And Try To be As Detailed As Possible"
+        />
+      <br />
+      <button type="submit" class="Report-btn">Submit</button>
+    </form>
+{% endblock %}

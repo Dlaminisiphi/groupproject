@@ -42,10 +42,5 @@ class Admin(db.Model):
 
 
 
-def create_login(app):
- with app.app_context():
-  db.create_all()
-  admin=Admin(username='admin',password=generate_password_hash('admin123', method='sha256'))
-  db.session.add(admin)
-  db.session.commit()
+
 

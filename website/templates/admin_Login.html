@@ -1,21 +1,28 @@
 {%extends "base.html"%}{% block title %}Admin Page{%endblock%}
-
 {% block content %}
-<form method="post">
-    <div class="Admin_Login">
-        <h1 class="header"> Admin Log In</h1>
-        <div>
-            <h3>Email Address</h3>
-            <input type="text" class="Admin_Sign_content" name="Admin_email" placeholder="Enter email address">
-        </div>
-        <div>
-            <h3>Password</h3>
-            <input type="password" class="Admin_Sign_content" name="Admin_password" placeholder="Enter password">
-        </div>
-        <br>
-        <button class="signup_btn" name="btn">Submit</button>
-
-        
+<form method="POST">
+    <h3 align="center"> Admin Login</h3>
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter email"
+      />
     </div>
-</form>
-{% endblock %}
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Enter password"
+      />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+  {% endblock %}
