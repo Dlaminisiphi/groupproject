@@ -1,4 +1,4 @@
-{%extends "base.html"%}{% block title %}User Page{%endblock%}
+{%extends "base.html"%}{% block title %}User Home Page{%endblock%}
 {% block content %}
 <!DOCTYPE html>
 <html lang="en">
@@ -25,16 +25,6 @@
       <button class="btn btn-secondary" onclick="location.href='/view_complaint/{{ user.id }}'" >View Complaint</button>
     </div>
   </div>
-  <h1>Contact Form</h1>
-    <form method="POST" action="/user_home_page">
-        <label>Name:</label>
-        <input type="text" name="name" required><br>
-        <label>Email:</label>
-        <input type="email" name="email" required><br>
-        <label>Message:</label>
-        <textarea name="message" required></textarea><br>
-        <input type="submit" value="Send">
-    </form>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
   <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
 </body>

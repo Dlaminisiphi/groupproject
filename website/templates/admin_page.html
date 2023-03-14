@@ -1,17 +1,32 @@
 
-{%extends "base.html"%}{% block title %}Admin Page{%endblock%}
-{% block content %}
 
+{% block content %}
 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <title>My Table</title>
+   <title>Admin Page</title>
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbar">
+   <div class="navbar-nav">
+      <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+      <a class="nav-item nav-link" id="login" href="/login"> User Login</a>
+    </div>
+  </div>
+</nav>
    <div class="container my-2">
       <div class="d-flex justify-content-center align-items-center">
           <img style="width: 5%;"
@@ -49,11 +64,13 @@
                 <td>
                   <form method="POST" action="{{ url_for('auth.user_send') }}" >
                       <input type="hidden" name="email" value="{{ report.user.email }}">
-                      <button type="submit" class="btn btn-primary" >Mark as seen</button>
+                      <button type="submit" id="btn1" class="btn btn-primary" onclick="enableBtn2()" >Problem Seen</button>
                   </form>
-                   <button type="button" class="btn btn-success" onclick="location.href='/report/{{ report.id }}/fixed'" >Problem Fixed</button>
-
-                   <button type="button" class="btn btn-danger" onClick="deleteReport({{ report.id }})">Delete</button>
+                  <form method="POST" action="{{ url_for('auth.user_Finished') }}" >
+                      <input type="hidden" name="email" value="{{ report.user.email }}">
+                      <button type="submit" id="btn2" class="btn btn-success" onclick="enableBtn3()" disabled >Problem Fixed</button>
+                  </form>
+                   <button type="button" id="btn3" class="btn btn-danger" onClick="deleteReport({{ report.id }})" disabled>Delete</button>
              <script>
                      function deleteReport(reportId) {
                  fetch("/delete-report", {
@@ -64,8 +81,17 @@
                  });
                  }
              </script>
-
-          
+             <script>
+               function enableBtn2() {
+                 document.getElementById("btn2").disabled = false;
+               }
+               
+               function enableBtn3() {
+                 if (!document.getElementById("btn2").disabled) {
+                   document.getElementById("btn3").disabled = false;
+                 }
+               }
+             </script>
                 </td>
              </tr>
             {% endfor %}

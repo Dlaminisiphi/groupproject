@@ -1,12 +1,12 @@
-from flask import Blueprint,render_template, request, flash, redirect, url_for, jsonify,session
+from flask import Blueprint,render_template, request, flash, redirect, url_for, jsonify
 from . import db
 from .models import User,Report
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user,current_user
 import json, smtplib 
 import ssl 
-import certifi 
-from urllib.request import urlopen 
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart 
 auth=Blueprint('auth',__name__)
 
 
@@ -103,34 +103,6 @@ def sign_up():
 @auth.route("/user_home_page", methods=['GET','POST'])
 @login_required
 def user_home_page():
-
-   
-    if request.method== 'POST':
-        name=request.form.get('name')
-        email=request.form.get('email')
-        message=request.form.get('message')
-        try:
-            
-            # Send the report by email
-            sender_email = "flaskschoolproject@gmail.com"
-            receiver_email = email
-            password = "lyuecijpplnqlpaq"
-            message = f"Subject: Report for {name}\n\n{message}"
-            context = ssl.create_default_context()
-            urllib.request.urlopen(req,context=context)
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-                server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
-        except Exception as e:
-            return "Failed to send the report by email: " + str(e), "error"
-        else:
-            return "Report has been sent by email to " + email, "success"
-
-
-    
-    
-    
-
        
     return render_template("user_home_page.html", user=current_user )
 #----------------------------------------------------------------BUTTONS IN HOME PAGE--------------------------------------------------------
@@ -177,7 +149,7 @@ def user_Page():
 def admin_page():
         reports=Report.query.all()
         return render_template("admin_page.html", user= current_user,reports=reports)
-
+#----------------------------------------------------DELETE FROM ADMIN SIDE------------------------------------------------------
 @auth.route('/delete-report', methods=['POST'])
 def delete_report():
     report = json.loads(request.data)  
@@ -187,24 +159,58 @@ def delete_report():
         db.session.delete(report)
         db.session.commit()
     return jsonify({})
-
+#--------------------------------------------------------QUERY RECIEVED----------------------------------------------
 @auth.route("/report_recieved", methods=['GET','POST'])
 def user_send():
     if request.method== 'POST':
         email = request.form.get('email')
-
         try:
-            
-            # Send the report by email
             sender_email = "flaskschoolproject@gmail.com"
             receiver_email = email
             password = "rwdgtyxxnyxlzmcf"
-            message = "Great News! The Dut maintance team have recieved your query and are attend to it"
+            subject = 'DUT MAINTENANCE TEAM UPDATE'
+            message = "Great News! The Dut maintenance team has recieved your query and is attending to it."
+            msg = MIMEMultipart()
+            msg['From'] = sender_email
+            msg['To'] = receiver_email
+            msg['Subject'] = subject
+            body = MIMEText(message)
+            msg.attach(body)
             context = ssl.create_default_context()
             with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
                 server.login(sender_email, password)
-                server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
+                server.sendmail(sender_email, receiver_email, msg.as_string())
         except Exception as e:
-            return "Failed to send the report by email: " + str(e), "error"
+            flash("Failed to send the report by email: " + str(e), category= "error")
+            return redirect(url_for('auth.admin_Page'))
         else:
-            return "Report has been sent by email to " + email, "success"
+            flash("Report has been sent by email to " + email, category="success")
+            return redirect(url_for('auth.admin_page'))
+#------------------------------------------------------QUERY FINISHED----------------------------------------------------------
+@auth.route("/user_finished",methods=['GET','POST'] )
+def user_Finished():
+    if request.method== 'POST':
+        email = request.form.get('email')
+        try:
+            sender_email = "flaskschoolproject@gmail.com"
+            receiver_email = email
+            password = "rwdgtyxxnyxlzmcf"
+            subject = 'DUT MAINTENANCE TEAM UPDATE'
+            message = 'Awesome News! The maintenance team has fixed the query you reported.'
+            msg = MIMEMultipart()
+            msg['From'] = sender_email
+            msg['To'] = receiver_email
+            msg['Subject'] = subject
+            body = MIMEText(message)
+            msg.attach(body)
+
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, msg.as_string())
+        except Exception as e:
+            flash("Failed to send the report by email: " + str(e), category= "error")
+            return redirect(url_for('auth.admin_Page'))
+        else:
+            flash("Report has been sent by email to " + email, category="success")
+            return redirect(url_for('auth.admin_page'))
