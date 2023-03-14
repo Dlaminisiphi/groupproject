@@ -1,0 +1,26 @@
+{%extends "base.html"%}{% block title %}Login Page{%endblock%}
+{% block content %}
+<div class="container-fluid mt-2">
+    <table class="table table-bordered">
+       <thead>
+          <tr>
+             <th>Place</th>
+             <th>Block</th>
+             <th>Problem</th>
+             <th>Progress</th>
+          </tr>
+       </thead>
+       <tbody>
+         {% for report in user.reports %}
+           <tr>
+            <td>{{report.placeof}}</td>
+            <td>{{report.blockof}}</td>
+            <td>{{report.problem}}</td>            
+           </tr>
+         {% endfor %}
+          </tr>
+       </tbody>
+    </table>
+ </div>
+ 
+ {% endblock %}

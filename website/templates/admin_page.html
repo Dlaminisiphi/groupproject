@@ -28,24 +28,51 @@
                <th>Block</th>
                <th>Problem</th>
                <th>Actions</th>
+               <th>Actions</th>
+               <th>Actions</th>
             </tr>
          </thead>
          <tbody>
             {% for report in reports %}
-             <tr>
-               
+             <tr>    
                 <td>{{report.id}}</td>
                 <td>{{report.placeof}}</td>
                 <td>{{report.blockof}}</td>
                 <td>{{report.problem}}</td>
+                <td>{{report.user_id}}</td>
+                <td>{{ report.user.email }}</td>
+
                 <td>
-                   <button type="button" class="btn btn-primary">Problem Seen</button>
-                   <button type="button" class="btn btn-success">Problem Fixed</button>
-                   <button type="button" class="btn btn-danger">Delete</button>
+
+                   <button type="button" class="btn btn-primary"  onClick="sendReportByEmail({{ report.user_id }})" >Mark as seen</button>
+                   <script>
+                     function sendReportByEmail(email) {
+                         fetch("/send-report-by-email", {
+                             method: "POST",
+                             body: JSON.stringify({ email: email }),
+                         }).then((_res) => {
+                             window.alert("Report has been sent to " + email);
+                         });
+                     }
+                 </script>
+                   <button type="button" class="btn btn-success" onclick="location.href='/report/{{ report.id }}/fixed'" >Problem Fixed</button>
+
+                   <button type="button" class="btn btn-danger" onClick="deleteReport({{ report.id }})">Delete</button>
+             <script>
+                     function deleteReport(reportId) {
+                 fetch("/delete-report", {
+                      method: "POST",
+                      body: JSON.stringify({ reportId: reportId }),
+                 }).then((_res) => {
+                  window.location.href = '/admin_page';
+                 });
+                 }
+             </script>
+
+          
                 </td>
              </tr>
             {% endfor %}
-  
             </tr>
          </tbody>
       </table>

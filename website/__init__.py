@@ -15,6 +15,7 @@ def create_app():
     #import blueprints
     from .views import views
     from .auth import auth
+    
 
 
    
@@ -23,8 +24,9 @@ def create_app():
     #Register them
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+
     
-    from .models import User, report,Admin
+    from .models import User, Report
 
     create_database(app)
    
@@ -38,13 +40,14 @@ def create_app():
     def load_user(id):
        return User.query.get(int(id))
 
-    return app
+    return app 
 
 def create_database(app):
  if not path.exists('website/' + DB_NAME):
     with app.app_context():
        db.create_all()
     print('Created database')
+
 
 
 
