@@ -1,5 +1,9 @@
+
 {%extends "base.html"%}{% block title %}Admin Page{%endblock%}
 {% block content %}
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,18 +47,10 @@
                 <td>{{ report.user.email }}</td>
 
                 <td>
-
-                   <button type="button" class="btn btn-primary"  onClick="sendReportByEmail({{ report.user_id }})" >Mark as seen</button>
-                   <script>
-                     function sendReportByEmail(email) {
-                         fetch("/send-report-by-email", {
-                             method: "POST",
-                             body: JSON.stringify({ email: email }),
-                         }).then((_res) => {
-                             window.alert("Report has been sent to " + email);
-                         });
-                     }
-                 </script>
+                  <form method="POST" action="{{ url_for('auth.user_send') }}" >
+                      <input type="hidden" name="email" value="{{ report.user.email }}">
+                      <button type="submit" class="btn btn-primary" >Mark as seen</button>
+                  </form>
                    <button type="button" class="btn btn-success" onclick="location.href='/report/{{ report.id }}/fixed'" >Problem Fixed</button>
 
                    <button type="button" class="btn btn-danger" onClick="deleteReport({{ report.id }})">Delete</button>
