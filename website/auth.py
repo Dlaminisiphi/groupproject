@@ -3,7 +3,10 @@ from . import db
 from .models import User,Report
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user,current_user
-import json, smtplib, ssl
+import json, smtplib 
+import ssl 
+import certifi 
+from urllib.request import urlopen 
 auth=Blueprint('auth',__name__)
 
 
@@ -100,12 +103,33 @@ def sign_up():
 @auth.route("/user_home_page", methods=['GET','POST'])
 @login_required
 def user_home_page():
-   
-   if   request.method== 'POST':
 
+   
+    if request.method== 'POST':
         name=request.form.get('name')
         email=request.form.get('email')
         message=request.form.get('message')
+        try:
+            
+            # Send the report by email
+            sender_email = "flaskschoolproject@gmail.com"
+            receiver_email = email
+            password = "lyuecijpplnqlpaq"
+            message = f"Subject: Report for {name}\n\n{message}"
+            context = ssl.create_default_context()
+            urllib.request.urlopen(req,context=context)
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+                server.login(sender_email, password)
+                server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
+        except Exception as e:
+            return "Failed to send the report by email: " + str(e), "error"
+        else:
+            return "Report has been sent by email to " + email, "success"
+
+
+    
+    
+    
 
        
     return render_template("user_home_page.html", user=current_user )
@@ -164,28 +188,23 @@ def delete_report():
         db.session.commit()
     return jsonify({})
 
-auth.route( '/send-report-by-email', methods=['POST'])
-def send_email():
-    user=json.loads(request.data)
-    user_email = user['email']
-    user = db.session.query(User).filter_by(email=user_email).first()
-    if user:
-        report_text = f"Report for {user.name}\n\n"
+@auth.route("/report_recieved", methods=['GET','POST'])
+def user_send():
+    if request.method== 'POST':
+        email = request.form.get('email')
+
         try:
+            
+            # Send the report by email
             sender_email = "flaskschoolproject@gmail.com"
-            receiver_email = user_email
-            password = "utgukowrlaewmccw"
-            message = f"Subject: Report for {user.name}\n\n{report_text}"
+            receiver_email = email
+            password = "rwdgtyxxnyxlzmcf"
+            message = "Great News! The Dut maintance team have recieved your query and are attend to it"
             context = ssl.create_default_context()
-            with smtplib.SMTP("smtp.gmail.com", 465, context=context) as server:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
                 server.login(sender_email, password)
                 server.sendmail(sender_email, receiver_email, message.encode('utf-8'))
         except Exception as e:
-            flash("Failed to send the report by email: " + str(e), "error")
+            return "Failed to send the report by email: " + str(e), "error"
         else:
-            flash("Report has been sent by email to " + user_email, "success")
-    else:
-        flash("Report not found or user does not have a report.", "error")
-    
-
-
+            return "Report has been sent by email to " + email, "success"
